@@ -1,2 +1,58 @@
-# piphi-network-octopus-energy
-PiPhi Network cloud runtime integration for Octopus Energy tariffs, consumption, and rate windows.
+# Piphi Network Octopus Energy
+
+Generated PiPhi integration runtime.
+
+## Run locally
+
+```bash
+pdm install -G dev
+pdm run uvicorn piphi_network_octopus_energy.main:app --reload --port 4212
+pdm run pytest
+pdm run python scripts/validate.py
+```
+
+The runtime listens on port `4212` by default and exposes the common PiPhi runtime route contract:
+
+- `GET /health`
+- `GET /diagnostics`
+- `POST /discover`
+- `POST /config`
+- `POST /config/sync`
+- `POST /deconfigure`
+- `POST /deconfigure/{config_id}`
+- `GET /state`
+- `GET /contract`
+- `GET /entities`
+- `GET /events`
+- `POST /events/device/{config_id}/example`
+- `POST /telemetry/example`
+- `POST /telemetry/device/{config_id}/example`
+- `POST /command`
+
+## Capability coverage
+
+`capability-catalog.json` inventories accounts, properties, meters,
+consumption, export, costs, products, tariffs, rates, Intelligent dispatches,
+optional programmes, polling health, events, conditions, and safe operations.
+Contract tests enforce that only implemented entries are advertised.
+
+Account, meter, region, agreement, tariff, and feature permissions must be
+negotiated before entities expose their precise capability set. API keys,
+billing details, tariff switching, and arbitrary API requests are excluded.
+
+## Manifest
+
+`manifest.json` is a starter manifest. Before publishing, update:
+
+- `image`
+- `version`
+- capabilities and commands
+- config fields and identity fields
+- entity metadata
+
+## Docker
+
+```bash
+docker build -t docker.io/piphinetwork/piphi-network-octopus-energy:0.1.0 .
+docker run --rm -p 4212:4212 docker.io/piphinetwork/piphi-network-octopus-energy:0.1.0
+```
