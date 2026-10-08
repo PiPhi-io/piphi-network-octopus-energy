@@ -4,7 +4,7 @@
   "id": "piphi-network-octopus-energy",
   "name": "Octopus Energy",
   "version": "0.1.0",
-  "description": "Monitor Octopus Energy accounts, meters, tariffs, consumption, and prices.",
+  "description": "Monitor current and upcoming Octopus Energy electricity tariff rates.",
   "metadata": {
     "generator": "piphi-network-create",
     "scaffold_version": "0.3.0",
@@ -72,11 +72,10 @@
     "endpoint": "/ui-config",
     "required": true,
     "editable_fields": [
-      "host",
       "alias",
-      "base_url",
-      "api_key",
-      "poll_interval_seconds"
+      "poll_interval_seconds",
+      "product_code",
+      "tariff_code"
     ],
     "runtime_fields": [
       "id",
@@ -85,12 +84,14 @@
       "device_id"
     ],
     "identity_fields": [
-      "host"
+      "product_code",
+      "tariff_code"
     ]
   },
   "identity": {
     "fields": [
-      "host"
+      "product_code",
+      "tariff_code"
     ]
   },
   "capabilities": {
@@ -98,6 +99,8 @@
       "kind": "sensor",
       "unit": "bool"
     },
+    "current_rate": {"kind": "sensor", "value_kind": "numeric", "unit": "p/kWh"},
+    "next_rate": {"kind": "sensor", "value_kind": "numeric", "unit": "p/kWh"},
     "refresh": {
       "kind": "action"
     }
@@ -105,7 +108,7 @@
   "commands": {
     "refresh": {
       "description": "Refresh the device state.",
-      "timeout_ms": 5000
+      "timeout_ms": 12000
     }
   },
   "entities": [
@@ -116,6 +119,8 @@
       "entity_type": "energy_account",
       "capabilities": [
         "connected",
+        "current_rate",
+        "next_rate",
         "refresh"
       ],
       "available_commands": [
@@ -135,10 +140,15 @@
       }
     }
   ],
+  "ui": {
+    "experience_packages": [
+      {"registry_id": "io.piphi.octopus-rates", "version_range": ">=0.1,<1", "auto_install": true}
+    ]
+  },
   "marketplace": {
     "metadata_version": 2,
     "display_name": "Octopus Energy",
-    "summary": "Monitor Octopus Energy accounts, meters, tariffs, consumption, and prices.",
+    "summary": "Monitor current and upcoming Octopus Energy electricity tariff rates.",
     "category": "energy",
     "regions": [
       "GB"
@@ -152,18 +162,12 @@
       "support_url": "https://github.com/PiPhi-io/piphi-network-octopus-energy/issues",
       "security_contact": "support@piphi.io"
     },
-    "access": [
-      {
-        "id": "credentials",
-        "label": "Account or device credentials",
-        "reason": "Authenticates only to the configured vendor account, service, or local device and keeps credentials out of state and diagnostics.",
-        "required": true
-      }
-    ],
+    "access_declared": true,
+    "access": [],
     "compatibility": [
       {
         "brand": "Octopus Energy",
-        "model": "Supported accounts, meters, and tariffs"
+        "model": "Public electricity tariffs"
       }
     ],
     "documentation_url": "https://github.com/PiPhi-io/piphi-network-octopus-energy",
@@ -180,17 +184,14 @@
       }
     },
     "device_types": [
-      "electricity meter",
-      "gas meter",
-      "energy tariff",
-      "account"
+      "electricity tariff"
     ],
     "protocols": [
       "Octopus Energy API",
       "HTTPS"
     ],
     "discovery_methods": [
-      "account and meter discovery"
+      "product and tariff code configuration"
     ],
     "connectivity": "cloud",
     "offline_support": "none",

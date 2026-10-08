@@ -125,6 +125,8 @@
       "entityType": "energy_account",
       "capabilities": [
         "connected",
+        "current_rate",
+        "next_rate",
         "refresh"
       ],
       "targeting": {

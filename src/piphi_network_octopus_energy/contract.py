@@ -23,6 +23,8 @@ CAPABILITIES: dict[str, dict[str, Any]] = {
         "kind": "sensor",
         "unit": "bool"
     },
+    "current_rate": {"kind": "sensor", "value_kind": "numeric", "unit": "p/kWh"},
+    "next_rate": {"kind": "sensor", "value_kind": "numeric", "unit": "p/kWh"},
     "refresh": {
         "kind": "action"
     }
@@ -31,7 +33,7 @@ CAPABILITIES: dict[str, dict[str, Any]] = {
 COMMANDS: dict[str, dict[str, Any]] = {
     "refresh": {
         "description": "Refresh the device state.",
-        "timeout_ms": 5000
+        "timeout_ms": 12000
     }
 }
 
@@ -39,26 +41,14 @@ CONFIG_SCHEMA: dict[str, Any] = {
     "schema": {
         "title": "Piphi Network Octopus Energy Setup",
         "type": "object",
-        "required": [
-            "host"
-        ],
+        "required": ["product_code", "tariff_code"],
         "properties": {
-            "host": {
-                "type": "string",
-                "title": "Host"
-            },
             "alias": {
                 "type": "string",
                 "title": "Alias"
             },
-            "base_url": {
-                "type": "string",
-                "title": "Base URL"
-            },
-            "api_key": {
-                "type": "string",
-                "title": "API Key"
-            },
+            "product_code": {"type": "string", "title": "Electricity product code"},
+            "tariff_code": {"type": "string", "title": "Electricity tariff code"},
             "poll_interval_seconds": {
                 "type": "integer",
                 "title": "Poll Interval Seconds",
@@ -67,18 +57,11 @@ CONFIG_SCHEMA: dict[str, Any] = {
         }
     },
     "uiSchema": {
-        "host": {
-            "placeholder": "192.168.1.50"
-        },
         "alias": {
-            "placeholder": "Office Device"
+            "placeholder": "Home electricity"
         },
-        "base_url": {
-            "placeholder": "https://api.vendor.example"
-        },
-        "api_key": {
-            "placeholder": "secret-token"
-        },
+        "product_code": {"placeholder": "AGILE-FLEX-22-11-25"},
+        "tariff_code": {"placeholder": "E-1R-AGILE-FLEX-22-11-25-A"},
         "poll_interval_seconds": {
             "placeholder": "60"
         }
@@ -92,6 +75,8 @@ FALLBACK_ENTITY: dict[str, Any] = {
     "entity_type": "energy_account",
     "capabilities": [
         "connected",
+        "current_rate",
+        "next_rate",
         "refresh"
     ],
     "available_commands": [

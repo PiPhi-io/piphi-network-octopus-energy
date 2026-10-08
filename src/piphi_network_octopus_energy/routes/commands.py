@@ -57,6 +57,7 @@ async def command(payload: dict[str, Any], request: Request):
         },
     )
     response = result.model_dump(mode="json")
+    response["command"] = command_name
     if result.ok:
         response.update(result.result)
     return response
