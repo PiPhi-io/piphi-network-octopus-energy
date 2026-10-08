@@ -31,13 +31,25 @@ The runtime listens on port `4212` by default and exposes the common PiPhi runti
 
 ## Capability coverage
 
+The first live capability slice reads the public Octopus electricity tariff
+`standard-unit-rates` endpoint. Configure the electricity `product_code` and
+`tariff_code` from your Octopus tariff; no host or API key is needed. The
+native Rates widget shows the current VAT-inclusive price in p/kWh and the
+next published price when available. The runtime fetches on configuration,
+refresh, and a bounded poll cadence. Without valid codes or a successful
+response it reports disconnected and does not invent a price. This slice uses
+no account API key. See the [Octopus API endpoint guide](https://developer.octopus.energy/guides/rest/api-endpoints/).
+
+The rest of the account and meter surface remains planned; the widget does not
+show consumption, bills, export, or tariff-switching controls.
+
 `capability-catalog.json` inventories accounts, properties, meters,
 consumption, export, costs, products, tariffs, rates, Intelligent dispatches,
 optional programmes, polling health, events, conditions, and safe operations.
 Contract tests enforce that only implemented entries are advertised.
 
 Account, meter, region, agreement, tariff, and feature permissions must be
-negotiated before entities expose their precise capability set. API keys,
+negotiated before those entities expose their precise capability set. API keys,
 billing details, tariff switching, and arbitrary API requests are excluded.
 
 ## Manifest

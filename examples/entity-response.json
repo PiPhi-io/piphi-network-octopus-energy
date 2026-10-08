@@ -7,6 +7,8 @@
       "entity_type": "energy_account",
       "capabilities": [
         "connected",
+        "current_rate",
+        "next_rate",
         "refresh"
       ],
       "available_commands": [
@@ -31,6 +33,8 @@
       "kind": "sensor",
       "unit": "bool"
     },
+    "current_rate": {"kind": "sensor", "value_kind": "numeric", "unit": "p/kWh"},
+    "next_rate": {"kind": "sensor", "value_kind": "numeric", "unit": "p/kWh"},
     "refresh": {
       "kind": "action"
     }
